@@ -4,13 +4,12 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import { userRouter } from "./router";
+import userRouter from "./routers/userRouter";
+import videoRouter from "./routers/videoRouter";
+import globalRouter from "./routers/globalRouter";
+import routes from "./routes";
 
 const app = express();
-
-const handleHome = (req, res) => res.send("Hello from home");
-
-const handleProfile = (req, res) => res.send("You are on my profile");
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -20,9 +19,10 @@ app.use(morgan("dev"));
 // app.use(betweenHome); //모든 함수에 미들웨어로 사용
 // app.get("/", betweenHome, handleHome); //이 라우터에서만 사용하는 미들웨어
 
-app.get("/", handleHome);
-app.get("/profile", handleProfile);
-
-app.use("/user", userRouter); //.use() 사용한 거 주목
+// use() 사용한 거 주목 /
+// /user에 접속했을 때에 userRouter가 작동되는 거라서  /user 뒤에 붙는 형식이에요!
+app.use(routes.home, globalRouter);
+app.use(routes.users, userRouter);
+app.use(routes.videos, videoRouter);
 
 export default app;
