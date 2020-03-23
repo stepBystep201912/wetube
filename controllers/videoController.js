@@ -66,7 +66,7 @@ export const videoDetail = async (req, res) => {
     const video = await Video.findById(id)
       .populate("creator")
       .populate("comments");
-    // console.log(video);
+    // console.log("2", video.comments[3].creator);
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     res.redirect(routes.home);
@@ -81,7 +81,8 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    console.log(video.creator, req.user.id);
+    // console.log(video.creator, req.user.id);
+
     if (String(video.creator) !== req.user.id) {
       throw Error();
     } else {
@@ -159,6 +160,38 @@ export const postAddComment = async (req, res) => {
       creator: user.id
     });
     video.comments.push(newComment.id);
+    video.save();
+    res.write(newComment.id);
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+export const postDeleteComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { vid, cid },
+    user
+  } = req;
+
+  // console.log(id, cid, vid);
+  try {
+    const comment = await Comment.findById(cid);
+    if (String(comment.creator) !== req.user.id) {
+      throw Error();
+    } else {
+      await Comment.findOneAndRemove({ _id: id });
+    }
+
+    const video = await Video.findById(id).populate("comments");
+
+    var newComments = video.comments.filter(function(item) {
+      return item.id !== cid;
+    });
+
+    video.comments = newComments;
     video.save();
   } catch (error) {
     res.status(400);

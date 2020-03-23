@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import mongoose from "mongoose";
 import session from "express-session";
+import flash from "express-flash";
 import MongoStore from "connect-mongo";
 import { localsMiddleware } from "./middlewares";
 import routes from "./routes";
@@ -42,6 +43,8 @@ app.use(
     store: new CokieStore({ mongooseConnection: mongoose.connection }) //CokieStore와 몽고간의 연결, 쿠키보존, 로그인상태유지됨
   })
 );
+
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
