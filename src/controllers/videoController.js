@@ -46,7 +46,7 @@ export const postUpload = async (req, res) => {
   //  path.replace(/\\/g, "/"),
 
   const newVideo = await Video.create({
-    fileUrl: path,
+    fileUrl: path.replace(/\\/g, "/"),
     title,
     description,
     creator: req.user.id

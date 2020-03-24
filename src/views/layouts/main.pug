@@ -8,19 +8,19 @@ html
         link(rel="stylesheet", href="/static/styles.css")
     body
         if messages.error
-            span=messages.error
+            //- span=messages.error
             +message({
                 type:'error',
                 text:messages.error
             })
         else if messages.info
-            span=messages.info
+            //- span=messages.info
             +message({
                 type:'info',
                 text:messages.info
             })
         else if messages.success
-            span=messages.success
+            //- span=messages.success
             +message({
                 type:'success',
                 text:messages.success
